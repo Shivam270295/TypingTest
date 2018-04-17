@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             else{
                 //score-=5;
                 wrongWords++;
-                wrongMessage+="\n'"+paraWords[i]+", typed as '"+wrongWords +"'";
+                wrongMessage+="\n'"+paraWords[i]+"' typed as '"+textWords[i] +"'";
             }
         }
 

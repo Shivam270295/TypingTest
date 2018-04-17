@@ -45,7 +45,7 @@
             <EditText
                 android:id="@+id/et_text"
                 android:hint="Type here"
-                android:layout_marginTop="5dp"
+                android:layout_margin="5dp"
                 android:maxLines="1"
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />

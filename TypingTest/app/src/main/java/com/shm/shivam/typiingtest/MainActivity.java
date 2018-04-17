@@ -7,8 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         tvTimer = (TextView) findViewById(R.id.tv_timer);
         tvPara = (TextView) findViewById(R.id.tv_para);
         etText = (EditText) findViewById(R.id.et_text);
+        etText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         tvPara.setText(para);
         final String[] paraWords = para.split(" ");
         timer = new CountDownTimer(60000, 1000) {
@@ -61,16 +64,24 @@ public class MainActivity extends AppCompatActivity {
                 for(int n = 0; n<occ;n++){
                     paraText+=paraWords[n] + " ";
                 }
-                paraText+="</font><font color='#4caf50'>"+paraWords[occ]+"</font> ";
+                String color = "#ff0000";
+                if(paraWords[occ].indexOf(words[occ])==0){
+                    color = "#4caf50";
+                }
+                paraText+="</font><font color='"+color+"'>"+paraWords[occ]+"</font> ";
                 for(int n = occ+1; n<paraWords.length;n++){
                     paraText+=paraWords[n] + " ";
                 }
                 tvPara.setText(Html.fromHtml(paraText));
-                String wordToLookFor = words[occ];
+                String wordToLookFor="";
+                if(occ>0){
+                    wordToLookFor+=" ";
+                }
+                wordToLookFor+= paraWords[occ];
                 int indexOfWord = tvPara.getText().toString().indexOf(wordToLookFor);
                 tvPara.setMovementMethod(new ScrollingMovementMethod());
                 final int lineNumber = tvPara.getLayout().getLineForOffset(indexOfWord);
-                if(lineNumber>2){
+                if(lineNumber>2 && occ>0){
                     tvPara.post(new Runnable() {
                         @Override
                         public void run() {
@@ -111,12 +122,19 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Time up");
         builder.setMessage("Your score is: "+(10*correctWords-5*wrongWords)+"\n Correct words: "+correctWords + "\n Wrong Words: "+wrongWords+wrongMessage);
-        builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 timerStarted = false;
                 etText.setText("");
+                tvPara.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int y = tvPara.getLayout().getLineTop(0);
+                        tvPara.scrollTo(0, y);
+                    }
+                });
             }
         });
         builder.setCancelable(false);

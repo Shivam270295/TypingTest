@@ -1,7 +1,7 @@
 # TypingTest
 
 ## To run apk file
-Download the apk file and run in any android device
+Download the apk file and run in any android device.
 
 ## To run the code in Android Studio
 
